@@ -1,4 +1,5 @@
 .game {
+    box-sizing: border-box;
     width:800px;
     margin: 0 auto;
     font-size:20px;
@@ -14,28 +15,47 @@
 }
 
 .column__coordinates {
-    margin-top: 30px;
+    margin-top: 36px;
 }
 
 .coordinate__column-item {
     text-align: center;
     width:30px;
-    height:30px; 
+    height:32px; 
 }
 
 .coordinate__row-item {
+    text-align: center;
     display:inline-block;
-    width:30px;
+    width:32px;
     height:30px; 
+}
+
+.squares {
+    border:1px solid darkcyan;
+    text-align: center;
+    font-size:28px;
+}
+
+.board-row {
+    margin:0;
+    padding:0;
+    height:32px;
 }
 
 .square {
     display:inline-block;
+    vertical-align: top;
     width:30px;
     height:30px;
-    border-radius: 0;
+    max-height: 30px;
     margin:0;
-    border-width:0;
+    /*border-width:.2px;*/
+    border: .1px solid rgb(50, 190, 183);
+}
+
+.square:hover{
+    cursor: pointer;
 }
 
 .submit_button {
@@ -52,4 +72,12 @@
     text-decoration: none;
     border: none;
     border-radius: 2.5px;
+}
+
+.red_cross {
+    color: red;
+}
+.dot {
+    color: blue;
+    font-weight:bold;
 }

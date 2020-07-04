@@ -15,12 +15,13 @@ class App extends Component {
     }
 
     render() {
-        if (this.state.user) {
-            return <Game name={this.state.user} />
-        }
-        else {
-            return <NameRequest getUserName={this.getUserName} />
-        }
+        //  if (this.state.user) {
+        return <Game name={this.state.user} />
+        /*  }
+          else {
+              
+        return <NameRequest getUserName={this.getUserName} />
+          }*/
     }
 }
 
