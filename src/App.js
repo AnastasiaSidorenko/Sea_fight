@@ -1,18 +1,27 @@
-import React from 'react';
+import React, { Component } from "react";
+import { NameRequest } from "./Components/NameRequest/NameRequest"
+import { Game } from "./Components/Game"
 
-class App extends React.Component {
-    constructor() {
-        super()
+class App extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            user: ""
+        }
+    }
+
+    getUserName = (name) => {
+        this.setState({ user: name })
     }
 
     render() {
-        return (
-            <div className="App">
-                <h2>APP</h2>
-            </div>
-        );
+        if (this.state.user) {
+            return <Game name={this.state.user} />
+        }
+        else {
+            return <NameRequest getUserName={this.getUserName} />
+        }
     }
 }
-
 
 export default App;
