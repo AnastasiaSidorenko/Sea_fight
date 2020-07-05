@@ -6,7 +6,9 @@ class App extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            user: ""
+            user: "",
+            //isStartAgainButtonClicked: false,
+            date: "",
         }
     }
 
@@ -14,9 +16,17 @@ class App extends Component {
         this.setState({ user: name })
     }
 
+    startAgain = () => {
+        //this.setState({ isStartAgainButtonClicked: true })
+        this.setState({ date: this.getDate() })
+    }
+
+    getDate = () => {
+        return Date.now();
+    }
+
     render() {
-        //  if (this.state.user) {
-        return <Game name={this.state.user} />
+        return <Game name={this.state.user} key={this.state.date} startAgainFunction={this.startAgain} />
         /*  }
           else {
               
