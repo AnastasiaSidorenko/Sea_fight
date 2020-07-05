@@ -8,9 +8,11 @@ export class Game extends React.Component {
             //_userSquares: Array(100).fill(null),
             _userSquares: Array(10).fill(null).map(item => (new Array(10).fill(null))),
             _userShips: Array(10).fill(null).map(item => (new Array(10).fill(null))),
+            userMoves: Array(10).fill(null).map(item => (new Array(10).fill(null))),
             //_systemSquares: Array(100).fill(null),
             _systemSquares: Array(10).fill(null).map(item => (new Array(10).fill(null))),
             _systemShips: Array(10).fill(null).map(item => (new Array(10).fill(null))),
+            systemMoves: Array(10).fill(null).map(item => (new Array(10).fill(null))),
             systemIsNext: true,
             isGameEnded: false
         };
@@ -22,9 +24,30 @@ export class Game extends React.Component {
             squares[i][j] = "X";
             this.setState({ _systemSquares: squares });
             console.log("systemBoard")
+            setTimeout(() => {
+                this.makeSystemMove(this.state._userSquares.slice());
+            }, 2000);
+            //this.makeSystemMove(this.state._userSquares.slice());
         }
         else {
             console.log("userBoard")
+        }
+    }
+
+    makeSystemMove = (userSquares) => {
+        let x, y;
+        x = this.getRandom(9);
+        y = this.getRandom(9);
+        if (userSquares[x][y]) {
+            return this.makeSystemMove();
+        }
+        else {
+            userSquares[x][y] = "X";
+            this.setState({ _userSquares: userSquares })
+
+            /*setTimeout(function () {
+                this.setState({ _userSquares: userSquares })
+            }.bind(this), 3000);*/
         }
     }
 
