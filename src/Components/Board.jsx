@@ -2,17 +2,10 @@ import React from 'react';
 import { Square } from "./Square"
 
 export class Board extends React.Component {
-    renderSquare(i) {
-        return <Square key={i} type={this.props.type} value={this.props.squares[i]} onClick={() => this.props.onClick(i, this.props.type)} />
+    renderSquare(i, j) {
+        return <Square key={i * 10 + j} shipType={this.props.ships[i][j]} type={this.props.type} value={this.props.squares[i][j]} onClick={() => this.props.onClick(i, j, this.props.type)} />
     }
 
-    shipsData = [
-        '',
-        [4, 'fourdeck'],
-        [3, 'tripledeck'],
-        [2, 'doubledeck'],
-        [1, 'singledeck']
-    ];
 
     render() {
         const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
@@ -33,7 +26,8 @@ export class Board extends React.Component {
                         {numbers.map((value, idx) => {
                             return <div key={idx} className="board-row">
                                 {numbers.map((value, index) => {
-                                    return this.renderSquare(idx * 10 + index)
+                                    //return this.renderSquare(idx * 10 + index)
+                                    return this.renderSquare(idx, index)
                                 })}</div>
                         })}
                     </div>

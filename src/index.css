@@ -15,16 +15,18 @@
 }
 
 .column__coordinates {
-    margin-top: 36px;
+    margin-top: 35px;
+    font-size: 24px;
 }
 
 .coordinate__column-item {
     text-align: center;
-    width:30px;
+    width:36px;
     height:32px; 
 }
 
 .coordinate__row-item {
+    font-size: 24px;
     text-align: center;
     display:inline-block;
     width:32px;
@@ -56,6 +58,11 @@
 
 .square:hover{
     cursor: pointer;
+}
+
+.square-ship {
+    background-color:rgb(144, 139, 177);
+    border: .1px solid rgba(80, 74, 121, 0.89);
 }
 
 .submit_button {
