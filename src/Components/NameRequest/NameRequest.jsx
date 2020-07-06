@@ -8,7 +8,6 @@ export class NameRequest extends React.Component {
 
     handleChange = (event) => {
         this.setState({ name: event.target.value })
-        console.log(`User:`, this.state);
     }
 
     handleSubmit = () => {

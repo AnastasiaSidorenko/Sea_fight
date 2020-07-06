@@ -3,7 +3,12 @@ import { Square } from "./Square"
 
 export class Board extends React.Component {
     renderSquare(i, j) {
-        return <Square key={i * 10 + j} shipType={this.props.ships[i][j]} type={this.props.type} value={this.props.squares[i][j]} onClick={() => this.props.onClick(i, j, this.props.type)} />
+        if (this.props.type === "system") { // если это доска компьютера, то передать функцию onClick клетке
+            return <Square key={i * 10 + j} shipType={this.props.ships[i][j]} type={this.props.type} value={this.props.squares[i][j]} onClick={() => this.props.onClick(i, j)} />
+        }
+        else {
+            return <Square key={i * 10 + j} shipType={this.props.ships[i][j]} type={this.props.type} value={this.props.squares[i][j]} />
+        }
     }
 
 

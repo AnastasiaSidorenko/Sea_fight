@@ -5,115 +5,112 @@ export class Game extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            //_userSquares: Array(100).fill(null),
             _userSquares: Array(10).fill(null).map(item => (new Array(10).fill(null))),
-            _userShips: Array(10).fill(null).map(item => (new Array(10).fill(null))),
-            userHits: Array(4).fill(null),
-            //_systemSquares: Array(100).fill(null),
             _systemSquares: Array(10).fill(null).map(item => (new Array(10).fill(null))),
+
+            _userShips: Array(10).fill(null).map(item => (new Array(10).fill(null))),
             _systemShips: Array(10).fill(null).map(item => (new Array(10).fill(null))),
-            systemHits: Array(4).fill(null),
+
+            userScore: 0,
+            systemScore: 0,
+
             status: "Ваш ход",
-            systemIsNext: true,
+            user_name: this.props.name,
             isGameEnded: false,
         };
+        //Squares - массив клеток, отмечать попадания и промахи, то есть выстрелы
+        //Ships - массив клеток, где отмечены корабли
+        //Score - счет игрока
     }
 
-    handleClick(i, j, type) {
-        if (type === "system") {
-            let squares = this.state._systemSquares.slice();
-            if (this.state._systemShips[i][j]) {
-                squares[i][j] = "X";
-                this.setState({ status: "Вы попали. Стреляет компьютер" })
-                this.setPlayerScore("user", i, j);
-            }
-            else {
-                squares[i][j] = "M";
-                this.setState({ status: "Вы промахнулись. Стреляет компьютер" })
-            }
-            this.setState({ _systemSquares: squares });
+    handleClick = (i, j, type) => {
+        let makeSystemMove = true;  //флаг - компьютер будет стрелять после этого хода
+        let squares = this.state._systemSquares.slice();
+        if (this.state._systemShips[i][j]) {
 
-            this.checkGameResult("user");
+            this.incrementPlayerScore("user");
+            squares[i][j] = "X";
 
+            let isUserWon = this.checkGameResult("user");
+            if (!isUserWon) {   //если пользователь не потопил все корабли
+                this.setState({ status: `Вы попали. ${this.state.user_name}, ваш ход.` })
+            }
+
+            makeSystemMove = false;   //сделать еще один ход
+        }
+        else {
+            squares[i][j] = "M";
+            this.setState({ status: "Вы промахнулись. Компьютер стреляет" })
+        }
+        this.setState({ _systemSquares: squares });     //обновить массив клеток с информацией о выстрелах
+
+        if (makeSystemMove) {
             setTimeout(() => {
-                this.makeSystemMove(this.state._userSquares.slice());
+                this.makeSystemMove(this.state._userSquares.slice());  //запустить ход компьютера
             }, 1000);
         }
     }
 
     makeSystemMove = (userSquares) => {
         let i, j;
-        i = this.getRandom(9);
+        let makeAnotherMove = false;  //флаг - компьютер ходит один раз
+        i = this.getRandom(9);  //случайная координата
         j = this.getRandom(9);
-        if (userSquares[i][j]) {
-            return this.makeSystemMove(userSquares);
+        if (userSquares[i][j]) { //если компьютер уже стрелял в клетку
+            return this.makeSystemMove(userSquares);  //запустить функцию еще раз
         }
         else {
             if (this.state._userShips[i][j]) {
-                this.setState({ status: "Компьютер попал в ваш корабль. Ваш выстрел." })
+
+                this.incrementPlayerScore("system");
+                this.setState({ status: "Компьютер попал в ваш корабль. Компьютер стреляет." })
+
                 userSquares[i][j] = "X";
-                console.log("systemScore", this.state.systemHits);
+                let isSystemWon = this.checkGameResult("system");
+                if (!isSystemWon) {
+                    makeAnotherMove = true; //флаг - компьютер делает еще один выстрел
+                }
             }
             else {
                 userSquares[i][j] = "M";
-                this.setState({ status: "Компьютер промахнулся. Ваш выстрел." })
+                this.setState({ status: `Компьютер промахнулся. ${this.state.user_name}, ваш выстрел.` })
             }
             this.setState({ _userSquares: userSquares });
 
-            this.checkGameResult("system");
+            if (makeAnotherMove) {
+                setTimeout(() => {
+                    this.makeSystemMove(userSquares);
+                }, 1000);
+            }
         }
     }
 
 
-    setPlayerScore = (who, i, j) => {
-        let index = this.getIndexByShipType(who, i, j);
-        let score;
+    incrementPlayerScore = (who) => {
         if (who === "user") {
-            score = "userHits"
+            this.setState({ userScore: this.state.userScore + 1 })
         }
         else {
-            score = "systemHits"
+            this.setState({ systemScore: this.state.systemScore + 1 })
         }
-        let array = this.state[score].slice();
-        array[index] += 1;
-        this.setState({ [score]: array })
-    }
-
-    getIndexByShipType = (who, i, j) => {
-        let ships;
-        if (who === "system") {
-            ships = "_systemShips";
-        }
-        else {
-            ships = "_userShips";
-        }
-        let shipType = this.state[ships][i][j];
-        if (shipType === "однопалубник") return 0;
-        if (shipType === "двухпалубник") return 1;
-        if (shipType === "трехпалубник") return 2;
-        if (shipType === "четырехпалубник") return 3;
     }
 
     checkGameResult = (who) => {
         if (who === "user") {
-            if (this.state.userHits[0] === 4 && this.state.userHits[1] === 6 && this.state.userHits[2] === 6 && this.state.userHits[3] === 4) {
-                this.setState({ isGameEnded: true, status: "Поздравляем! Вы победили" })
+            if (this.state.userScore + 1 === 20) {
+                this.setState({ isGameEnded: true, status: `Поздравляем, ${this.state.user_name}! Вы выиграли` })
+                return true;
             }
+            return false;
         }
         else {
-            if (this.state.systemHits[0] === 4 && this.state.systemHits[1] === 6 && this.state.systemHits[2] === 6 && this.state.systemHits[3] === 4) {
+            if (this.state.systemScore === 20) {
                 this.setState({ isGameEnded: true, status: "Вы проиграли." })
+                return true;
             }
+            return false;
         }
     };
-
-    /*shipsData = [
-        '',  //индекс в массиве означает количество кораблей этого типа
-        [4, 'fourdeck'], //первый параметр это количество палуб(клеток)
-        [3, 'tripledeck'],
-        [2, 'doubledeck'],
-        [1, 'singledeck']
-    ];*/
 
     shipsData = [
         '',  //индекс в массиве означает количество кораблей этого типа
@@ -124,17 +121,15 @@ export class Game extends React.Component {
     ];
 
 
-    componentDidMount = () => {
+    componentDidMount = () => {  //при mount компонента Game расположить корабли на досках
         this.locateShipsRandomly("user");
-        console.log("user", this.state._userShips)
         this.locateShipsRandomly("system");
-        console.log("system", this.state._systemShips)
     }
 
-    locateShipsRandomly = (type) => {
-        let shipsArray
+    locateShipsRandomly = (type) => {  //type - чья доска
+        let shipsArray;
         if (type === "user") {
-            shipsArray = this.state._userShips.map(function (arr) {
+            shipsArray = this.state._userShips.map(function (arr) {  //сделать копию массива клеток с кораблями
                 return arr.slice();
             });
         }
@@ -143,51 +138,40 @@ export class Game extends React.Component {
                 return arr.slice();
             });
         }
-        console.log("shipsArray initialization", shipsArray)
 
         for (let i = 1, length = this.shipsData.length; i < length; i++) {
-            let decks = this.shipsData[i][0];
-            let shipType = this.shipsData[i][1]
-            for (var j = 0; j < i; j++) {
-                this.getCoordinatesDecks(decks, shipType, shipsArray, type);
+            let decks = this.shipsData[i][0];  //количество палуб корабля
+            let shipType = this.shipsData[i][1];   //типа корабля
+            for (var j = 0; j < i; j++) {  //создать количество кораблей какого-либо типа соответственно номера его индекса
+                this.locateShip(decks, shipType, shipsArray, type); //расположить корабль случайным образом
             }
         }
     }
 
-    getRandom = (n) => {
-        // n - максимальное значение, которое хотим получить
+    getRandom = (n) => {  // n - максимальное необходимое значение
         return Math.floor(Math.random() * (n + 1));
     };
 
-    getCoordinatesDecks = (decks, shipType, shipsArray, type) => {
-        // получаем коэффициенты определяющие направление расположения корабля
-        // kx == 0 и ky == 1 — корабль расположен горизонтально,
-        // kx == 1 и ky == 0 - вертикально.
-        var kx = this.getRandom(1),
-            ky = (kx === 0) ? 1 : 0,
-            x, y;
+    locateShip = (decks, shipType, shipsArray, type) => {
+        var kx = this.getRandom(1),     //получить направление корабля
+            ky = (kx === 0) ? 1 : 0,    // kx == 1 и ky == 0 - корабль расположен вертикально 
+            x, y;                       // kx == 0 и ky == 1 - горизонтально.
 
-        // в зависимости от направления расположения, генерируем
-        // начальные координаты
-        if (kx === 0) {
+        if (kx === 0) {         //сгенерировать начальные координаты
             x = this.getRandom(9);
-            y = this.getRandom(10 - decks);
+            y = this.getRandom(10 - decks); // 10-кол-во палуб, чтобы не было выхода за границы поля по горизонтали
         } else {
-            x = this.getRandom(10 - decks);
+            x = this.getRandom(10 - decks); // 10-кол-во палуб, чтобы не было выхода за границы поля по вертикали
             y = this.getRandom(9);
         }
-        // проверяем валидность координат всех палуб корабля:
-        // нет ли в полученных координатах или соседних клетках ранее
-        // созданных кораблей
-        let result = this.checkLocationShip(x, y, kx, ky, decks, shipsArray);
-        // если координаты невалидны, снова запускаем функцию
-        if (!result) return this.getCoordinatesDecks(decks, shipType, shipsArray, type);
 
-        // создаём объект, свойствами которого будут начальные координаты и
-        // коэффициенты определяющие направления палуб
-        if (kx === 0) { //корабль расположен горизонтально
+        let result = this.checkLocationShip(x, y, kx, ky, decks, shipsArray);  //проверить может ли быть расположен корабль в этих координатах
+
+        if (!result) return this.locateShip(decks, shipType, shipsArray, type); //если не может, то заново запустить функцию
+
+        if (kx === 0) { //если корабль расположен горизонтально
             for (let i = 0; i < decks; i++) {
-                shipsArray[x][y + i] = shipType;
+                shipsArray[x][y + i] = shipType; //ставим отметку на ячейку массива корабли, что там есть корабль
             }
         }
         else { //если корабль расположен вертикально
@@ -196,65 +180,40 @@ export class Game extends React.Component {
             }
         }
 
-        /*if (kx === 0) {
-            for (let i = 0; i < decks; i++) {
-                shipsArray[x * 10 + y + i] = shipType;
-            }
-        }
-        else {
-            for (let i = 1; i <= decks; i++) {
-                shipsArray[x * i + y] = shipType;
-            }
-        }*/
-        if (type === "user") {
-            this.setState({ _userShips: shipsArray })
+        if (type === "user") { //расположить на поле пользователя 
+            this.setState({ _userShips: shipsArray })   //сохранить измененный массив с новым кораблем
         }
         else {
             this.setState({ _systemShips: shipsArray })
         }
-
-        /* var obj = {
-             x: x,
-             y: y,
-             kx: kx,
-             ky: ky
-         };
-         return obj;*/
     }
 
     checkLocationShip(x, y, kx, ky, decks, shipsArray) {
 
-        let fromX, toX, fromY, toY;
+        let fromX, toX, fromY, toY;  // индексы начала и конца проверки 
+        fromX = (x === 0) ? x : x - 1;  //если корабль в первой строке, то начать проверку с этой строки, если нет с строки выше
 
-        // формируем индексы начала и конца цикла для строк
-        // если координата 'x' равна нулю, то это значит, что палуба расположена в самой верхней строке,
-        // т. е. примыкает к верхней границе и началом цикла будет строка с индексом 0
-        // в противном случае, нужно начать проверку со строки с индексом на единицу меньшим, чем у
-        // исходной, т.е. находящейся выше исходной строки
-        fromX = (x === 0) ? x : x - 1;
-        // если условие истинно - это значит, что корабль расположен вертикально и его последняя палуба примыкает
-        // к нижней границе игрового поля
-        // поэтому координата 'x' последней палубы будет индексом конца цикла
-        if (x + kx * decks === 10 && kx === 1) toX = x + kx * decks;
-        // корабль расположен вертикально и между ним и нижней границей игрового поля есть, как минимум, ещё
-        // одна строка, координата этой строки и будет индексом конца цикла
-        else if (x + kx * decks < 10 && kx === 1) toX = x + kx * decks + 1;
+        //если корабль расположен вертикально и последняя палуба примыкает к границе поля
+        if (x + kx * decks === 10 && kx === 1) toX = x + decks; //конец проверки = индекс строки последней палубы
+
+        //если корабль расположен вертикально и после последней палубы есть еще строка по меньшей мере
+        if (x + kx * decks < 10 && kx === 1) toX = x + decks + 1; //конец проверки = индекс строки после корабля
+
         // корабль расположен горизонтально вдоль нижней границы игрового поля
-        else if (x === 9 && kx === 0) toX = x + 1;
+        if (x === 9 && kx === 0) toX = x + 1;
+
         // корабль расположен горизонтально где-то по середине игрового поля
-        else if (x < 9 && kx === 0) toX = x + 2;
+        if (x < 9 && kx === 0) toX = x + 2;
 
-        // формируем индексы начала и конца цикла для столбцов
-        // принцип такой же, как и для строк
+        // формируем индексы начала и конца цикла для столбцов, принцип аналогичен строкам
         fromY = (y === 0) ? y : y - 1;
-        if (y + ky * decks === 10 && ky === 1) toY = y + ky * decks;
-        else if (y + ky * decks < 10 && ky === 1) toY = y + ky * decks + 1;
-        else if (y === 9 && ky === 0) toY = y + 1;
-        else if (y < 9 && ky === 0) toY = y + 2;
+        if (y + ky * decks === 10 && ky === 1) toY = y + decks;
+        if (y + ky * decks < 10 && ky === 1) toY = y + decks + 1;
+        if (y === 9 && ky === 0) toY = y + 1;
+        if (y < 9 && ky === 0) toY = y + 2;
 
-        // запускаем циклы и проверяем выбранный диапазон ячеек
-        // если значение текущей ячейки равно 1 (там есть палуба корабля)
-        // возвращаем false 
+        // циклы с проверкой ячеек в заданном диапазоне
+        // если значение текущей ячейки не пусто (есть палуба корабля) возвращаем false
         for (var i = fromX; i < toX; i++) {
             for (var j = fromY; j < toY; j++) {
                 if (shipsArray[i][j]) return false;
@@ -263,26 +222,38 @@ export class Game extends React.Component {
         return true;
     }
 
-    //Array(x).fill(null).map(item =>(new Array(y).fill(null)))
-
     render() {
-        //let status = 'Следующий ход: ' + (this.state.systemIsNext ? 'Вы' : 'Система');
-        //let moves;
         let StartAgain = () => {
-            // if (this.state.isGameEnded) {
-            return <button className="submit_button" onClick={this.props.startAgainFunction}>Начать сначала</button>
-            // }
-            // else return '';
+            if (this.state.isGameEnded) { //показать кнопку Начать сначала, если игра завершена
+                return <button className="submit_button" onClick={this.props.startAgainFunction}>Начать сначала</button>
+            }
+            else return '';
+        }
+
+        let Boards = () => {
+            if (!this.state.isGameEnded) {  //если игра закончена, заблокировать возможность сделать выстрел на поле компьютера
+                return (
+                    <div className="game-boards">
+                        <Board ships={this.state._userShips} squares={this.state._userSquares} type="user" />
+                        <Board ships={this.state._systemShips} squares={this.state._systemSquares} type="system" onClick={(i, j) => this.handleClick(i, j)} />
+                    </div>
+                );
+            }
+            else {
+                return (
+                    <div className="game-boards">
+                        <Board ships={this.state._userShips} squares={this.state._userSquares} type="user" onClick={() => { }} />
+                        <Board ships={this.state._systemShips} squares={this.state._systemSquares} type="system" onClick={() => { }} />
+                    </div>
+                )
+            }
         }
 
         return (
             <div className="game">
                 <div className="game-info">Морской бой</div>
                 <div className="game-space">
-                    <div className="game-boards">
-                        <Board ships={this.state._userShips} squares={this.state._userSquares} type="user" onClick={(i, j) => this.handleClick(i, j, "user")} />
-                        <Board ships={this.state._systemShips} squares={this.state._systemSquares} type="system" onClick={(i, j) => this.handleClick(i, j, "system")} />
-                    </div>
+                    <Boards />
                     <div className="game-info">
                         <div>{this.state.status}</div>
                     </div>

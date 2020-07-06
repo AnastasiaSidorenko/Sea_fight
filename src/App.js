@@ -7,7 +7,7 @@ class App extends Component {
         super(props);
         this.state = {
             user: "",
-            //isStartAgainButtonClicked: false,
+
             date: "",
         }
     }
@@ -17,7 +17,6 @@ class App extends Component {
     }
 
     startAgain = () => {
-        //this.setState({ isStartAgainButtonClicked: true })
         this.setState({ date: this.getDate() })
     }
 
@@ -26,12 +25,13 @@ class App extends Component {
     }
 
     render() {
-        return <Game name={this.state.user} key={this.state.date} startAgainFunction={this.startAgain} />
-        /*  }
-          else {
-              
-        return <NameRequest getUserName={this.getUserName} />
-          }*/
+        if (this.state.user) {
+            return <Game name={this.state.user} key={this.state.date} startAgainFunction={this.startAgain} />
+        }
+        else {
+
+            return <NameRequest getUserName={this.getUserName} />
+        }
     }
 }
 

@@ -1,3 +1,11 @@
+.body {
+    height:700px;
+}
+
+#root {
+    height:100%;
+}
+
 .game {
     box-sizing: border-box;
     width:800px;
@@ -93,6 +101,7 @@
 .red_cross {
     color: red;
 }
+
 .dot {
     display: inline-block;
     height:10px;
