@@ -4,6 +4,6 @@
 
 In the project directory, you can run:
 
-### `npm run dev`
+### `npm start`
  
 Запустить react server(localhost:3000)
