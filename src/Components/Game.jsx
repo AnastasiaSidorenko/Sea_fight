@@ -15,6 +15,7 @@ export class Game extends React.Component {
             systemScore: 0,
 
             status: "Ваш ход",
+            finalStatus: "",
             user_name: this.props.name,
             isGameEnded: false,
         };
@@ -97,15 +98,15 @@ export class Game extends React.Component {
 
     checkGameResult = (who) => {
         if (who === "user") {
-            if (this.state.userScore + 1 === 20) {
-                this.setState({ isGameEnded: true, status: `Поздравляем, ${this.state.user_name}! Вы выиграли` })
+            if (this.state.userScore + 1 === 20) {  // 20 клеток занимают все корабли
+                this.setState({ isGameEnded: true, finalStatus: `Поздравляем, ${this.state.user_name}! Вы выиграли` })
                 return true;
             }
             return false;
         }
         else {
             if (this.state.systemScore === 20) {
-                this.setState({ isGameEnded: true, status: "Вы проиграли." })
+                this.setState({ isGameEnded: true, finalStatus: "Вы проиграли." })
                 return true;
             }
             return false;
@@ -249,13 +250,15 @@ export class Game extends React.Component {
             }
         }
 
+        let status = (!this.state.isGameEnded) ? this.state.status : this.state.finalStatus;
+
         return (
             <div className="game">
                 <div className="game-info">Морской бой</div>
                 <div className="game-space">
                     <Boards />
                     <div className="game-info">
-                        <div>{this.state.status}</div>
+                        <div>{status}</div>
                     </div>
                     <div className="game-info">
                         <StartAgain />
