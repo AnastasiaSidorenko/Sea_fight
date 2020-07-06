@@ -4,11 +4,7 @@
     align-items: center;
     justify-content: space-around;
     margin: 0 auto;
-    height:200px;
-}
-
-.form__item {
-    margin-bottom: 15px;
+    height:170px;
 }
 
 .form__item-label {
