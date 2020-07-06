@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/Sea_fight/static/css/main.ba43c990.chunk.css",
+    "main.css": "/Sea_fight/static/css/main.ab0ee5d2.chunk.css",
     "main.js": "/Sea_fight/static/js/main.0f87bed0.chunk.js",
     "main.js.map": "/Sea_fight/static/js/main.0f87bed0.chunk.js.map",
     "runtime-main.js": "/Sea_fight/static/js/runtime-main.8bcd84d5.js",
@@ -8,15 +8,15 @@
     "static/js/2.4c912ada.chunk.js": "/Sea_fight/static/js/2.4c912ada.chunk.js",
     "static/js/2.4c912ada.chunk.js.map": "/Sea_fight/static/js/2.4c912ada.chunk.js.map",
     "index.html": "/Sea_fight/index.html",
-    "precache-manifest.9a82c96fc074d156cea04fc153a96793.js": "/Sea_fight/precache-manifest.9a82c96fc074d156cea04fc153a96793.js",
+    "precache-manifest.4dd57f873bc9f3e967aaca9777acdc37.js": "/Sea_fight/precache-manifest.4dd57f873bc9f3e967aaca9777acdc37.js",
     "service-worker.js": "/Sea_fight/service-worker.js",
-    "static/css/main.ba43c990.chunk.css.map": "/Sea_fight/static/css/main.ba43c990.chunk.css.map",
+    "static/css/main.ab0ee5d2.chunk.css.map": "/Sea_fight/static/css/main.ab0ee5d2.chunk.css.map",
     "static/js/2.4c912ada.chunk.js.LICENSE.txt": "/Sea_fight/static/js/2.4c912ada.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.8bcd84d5.js",
     "static/js/2.4c912ada.chunk.js",
-    "static/css/main.ba43c990.chunk.css",
+    "static/css/main.ab0ee5d2.chunk.css",
     "static/js/main.0f87bed0.chunk.js"
   ]
 }
