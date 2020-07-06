@@ -6,4 +6,4 @@ In the project directory, you can run:
 
 ### `npm run dev`
  
-Запустить react server(localhost:8080)
+Запустить react server(localhost:3000)
