@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "97c5f80ed73b86f3d94cff9e638ce062",
+    "revision": "1e9ab32cc3eba9ca88c30e1130e3cfb6",
     "url": "/Sea_fight/index.html"
   },
   {
-    "revision": "9ef62b3217b0b9f6d3bd",
+    "revision": "e4ba271711984122f5b2",
     "url": "/Sea_fight/static/css/main.ba43c990.chunk.css"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/Sea_fight/static/js/2.4c912ada.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "9ef62b3217b0b9f6d3bd",
-    "url": "/Sea_fight/static/js/main.e3d4e685.chunk.js"
+    "revision": "e4ba271711984122f5b2",
+    "url": "/Sea_fight/static/js/main.0f87bed0.chunk.js"
   },
   {
     "revision": "4409bb15788ed1adf5a5",
