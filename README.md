@@ -1,9 +1,9 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
 
 ## Available Scripts
 
 In the project directory, you can run:
 
-### `npm run dev`
+### `npm start`
  
-Запустить react и json server(localhost:8080)
+Запустить react server(localhost:3000)
